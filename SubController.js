@@ -17,7 +17,10 @@ class SubController {
 
   addUser(nome_usuario, nome_sala) {
     const sala = this.buscarSala(nome_sala);
-    const found = sala.blackList.find(element => element == nome_usuario);
+    if (sala == undefined) {
+      return false;
+    }
+    const found = sala.blackList.find((element) => element == nome_usuario);
     if (sala !== undefined && found == undefined) {
       sala.users.push(nome_usuario);
       return true;
@@ -41,10 +44,10 @@ class SubController {
     return response;
   }
 
-  banUser(nome_usuario, nome_sala){
+  banUser(nome_usuario, nome_sala) {
     const sala = this.buscarSala(nome_sala);
     if (sala !== undefined) {
-      sala.blackList.push(nome_usuario)
+      sala.blackList.push(nome_usuario);
     }
   }
 
@@ -117,7 +120,7 @@ subInstance.on("message", (topic, message) => {
           payload.msg = `Apenas administradores podem kickar usuários de salas`;
         }
         subInstance.publish("system_to_client", JSON.stringify(payload));
-      } else if (payload.command == "/ban"){
+      } else if (payload.command == "/ban") {
         if (payload.role == "admin") {
           if (sub.removeUserRoom(payload.param[0], payload.param[1])) {
             sub.banUser(payload.param[0], payload.param[1]);
@@ -129,6 +132,26 @@ subInstance.on("message", (topic, message) => {
         } else {
           payload.msg = `Apenas administradores podem banir usuários de salas`;
         }
+        subInstance.publish("system_to_client", JSON.stringify(payload));
+      } else if (payload.command == "/rooms") {
+        // Mostra as salas
+        var finalValue = "";
+        sub.rooms.forEach((element, index) => {
+          finalValue = finalValue + `\n [${index}] ${element.nome}`;
+        });
+        payload.msg = finalValue;
+        subInstance.publish("system_to_client", JSON.stringify(payload));
+      } else if (payload.command == "/help") {
+        var listOfCommands = `
+          Cadastrar nome: ! seunome
+          Buscar salas: /rooms
+          Entrar em sala: /joinroom nomedasala
+          Promover para admin: #
+          Criar sala: /createroom nomedasala
+          Kickar usuário: /kick nomedasala nomeusuario
+          Banir usuário: /kick nomedasala nomeusuario
+        `;
+        payload.msg = listOfCommands;
         subInstance.publish("system_to_client", JSON.stringify(payload));
       }
       break;

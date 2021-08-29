@@ -37,10 +37,12 @@ class Publisher {
           console.log(`SISTEMA - ${msgJson.msg}`);
         }
 
-        if (msgJson.removeduser !== undefined){
-          if(msgJson.removeduser == this.meunome){
+        if (msgJson.removeduser !== undefined) {
+          if (msgJson.removeduser == this.meunome) {
             this.salaAtual = undefined;
-            console.log(`SISTEMA - Você foi removido da sala e voltou ao chat geral`);
+            console.log(
+              `SISTEMA - Você foi removido da sala e voltou ao chat geral`
+            );
           }
         }
       }
@@ -82,13 +84,33 @@ class Publisher {
           role: this.minhaRole,
         })
       );
-    } else if (splitedCommand[0] == "/ban"){
+    } else if (splitedCommand[0] == "/ban") {
       pub.publish(
         "cmd",
         JSON.stringify({
           user: this.meunome,
           command: splitedCommand[0],
           param: [splitedCommand[1], splitedCommand[2]],
+          role: this.minhaRole,
+        })
+      );
+    } else if (splitedCommand[0] == "/rooms") {
+      pub.publish(
+        "cmd",
+        JSON.stringify({
+          user: this.meunome,
+          command: splitedCommand[0],
+          param: "",
+          role: this.minhaRole,
+        })
+      );
+    } else if (splitedCommand[0] == "/help") {
+      pub.publish(
+        "cmd",
+        JSON.stringify({
+          user: this.meunome,
+          command: splitedCommand[0],
+          param: "",
           role: this.minhaRole,
         })
       );
