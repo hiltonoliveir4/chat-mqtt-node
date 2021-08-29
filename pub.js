@@ -132,7 +132,7 @@ class Publisher {
   mensagem(text_menssage) {
     if (this.meunome == "") {
       console.log(
-        "SISTEMA - Cadastre-se para iniciar uma conversa, utilize o comando !meunome seunome"
+        "SISTEMA - Cadastre-se para iniciar uma conversa, utilize o comando ! seunome"
       );
     } else {
       pub.publish(
